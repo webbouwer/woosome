@@ -5,6 +5,9 @@
 
 // register functions
 require_once( get_template_directory() . '/customizer.php'); // customizer functions
+require_once( get_template_directory() . '/assets/woosome_functions.php');
+//require_once( get_template_directory() . '/assets/widget_breadcrumbs.php');
+
 
 
 // register options
@@ -27,6 +30,13 @@ function basic_setup_register_menus() {
 	);
 }
 add_action( 'init', 'basic_setup_register_menus' );
+
+/*
+function basic_load_widgets() {
+		register_widget( 'woosome_breadcrumbs_widget' );
+}
+add_action( 'widgets_init', 'basic_load_widgets' );
+*/
 
 // activate the Links Manager:: add_filter( 'pre_option_link_manager_enabled', '__return_true' );
 
@@ -128,6 +138,8 @@ function wp_main_theme_get_postdata(){
         //wp_die();
         return $response;
 }
+
+/*
 function wp_main_theme_get_customizer(){
     return json_encode( get_theme_mods() );
 }
@@ -147,12 +159,13 @@ $wp_global_data['tagdata']      = wp_main_theme_get_all_tags();
 $wp_global_data['catdata']      = wp_main_theme_get_all_categories();
 
 // register global customizer variables
+
 function wp_main_theme_global_js() {
     // add jquery
     wp_enqueue_script("jquery"); // default wp jquery
-    wp_register_script( 'custom_global_js', get_template_directory_uri().'/global.js', 99, '1.0', false); // register the script
+    wp_register_script( 'custom_global_js', get_template_directory_uri().'/js/global.js', 99, '1.0', false); // register the script
     global $wp_global_data; // get global data var
-	wp_localize_script( 'custom_global_js', 'site_data', $wp_global_data ); // localize the global data list for the script
+		wp_localize_script( 'custom_global_js', 'site_data', $wp_global_data ); // localize the global data list for the script
     // localize the script with specific data.
     //$color_array = array( 'color1' => get_theme_mod('color1'), 'color2' => '#000099' );
     //wp_localize_script( 'custom_global_js', 'object_name', $color_array );
@@ -160,7 +173,7 @@ function wp_main_theme_global_js() {
     wp_enqueue_script( 'custom_global_js');
 }
 add_action('wp_enqueue_scripts', 'wp_main_theme_global_js');
-
+*/
 
 // register style sheet
 function wp_main_theme_stylesheet(){
@@ -170,10 +183,13 @@ function wp_main_theme_stylesheet(){
 add_action( 'wp_head', 'wp_main_theme_stylesheet', 9999 );
 
 // register style sheet function for editor
-function onepiece_editor_styles() {
+function Woosome_editor_styles() {
     add_editor_style( 'style.css' );
 }
-add_action( 'admin_init', 'onepiece_editor_styles' );
+add_action( 'admin_init', 'woosome_editor_styles' );
+
+
+
 
 
 
@@ -399,6 +415,12 @@ function check_sidebar_params( $params ) {
 // Add widget param check for empty html correction
 add_filter( 'dynamic_sidebar_params', 'check_sidebar_params' );
 
+
+
+
+
+
+
 /**
 * Truncates text.
 *
@@ -534,7 +556,7 @@ function disable_emojicons_tinymce( $plugins ) {
  * control (remove) gravatar
  */
 function bp_remove_gravatar ($image, $params, $item_id, $avatar_dir, $css_id, $html_width, $html_height, $avatar_folder_url, $avatar_folder_dir) {
-	$default = get_stylesheet_directory_uri() .'/images/avatar.png';
+	$default = includes_url().'/images/icon-pointer-flag-2x.png';
 	if( $image && strpos( $image, "gravatar.com" ) ){
 		return '<img src="' . $default . '" alt="avatar" class="avatar" ' . $html_width . $html_height . ' />';
 	} else {
@@ -543,12 +565,12 @@ function bp_remove_gravatar ($image, $params, $item_id, $avatar_dir, $css_id, $h
 }
 add_filter('bp_core_fetch_avatar', 'bp_remove_gravatar', 1, 9 );
 function remove_gravatar ($avatar, $id_or_email, $size, $default, $alt) {
-	$default = get_stylesheet_directory_uri() .'/images/avatar.png';
+	$default = includes_url().'/images/icon-pointer-flag-2x.png';
 	return "<img alt='{$alt}' src='{$default}' class='avatar avatar-{$size} photo avatar-default' height='{$size}' width='{$size}' />";
 }
 add_filter('get_avatar', 'remove_gravatar', 1, 5);
 function bp_remove_signup_gravatar ($image) {
-	$default = get_stylesheet_directory_uri() .'/images/avatar.png';
+	$default = includes_url().'/images/icon-pointer-flag-2x.png';
 	if( $image && strpos( $image, "gravatar.com" ) ){
 		return '<img src="' . $default . '" alt="avatar" class="avatar" width="60" height="60" />';
 	} else {

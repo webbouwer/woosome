@@ -22,7 +22,7 @@ $header_image = get_header_image();
     echo
     //'<link rel="canonical" href="'.home_url(add_query_arg(array(),$wp->request)).'">'
 	'<link rel="pingback" href="'.get_bloginfo( 'pingback_url' ).'" />'
-	.'<link rel="shortcut icon" href="images/favicon.ico" />'
+	//.'<link rel="shortcut icon" href="images/favicon.ico" />'
 	// tell devices wich screen size to use by default
 	.'<meta name="viewport" content="initial-scale=1.0, width=device-width" />'
 	.'<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">';
@@ -32,6 +32,7 @@ $header_image = get_header_image();
 		.'<meta property="og:url" content="' . get_permalink() . '"/>'
 		.'<meta property="og:site_name" content="'.esc_attr( get_bloginfo( 'name', 'display' ) ).'"/>'
 		.'<meta property="og:description" content="'.get_bloginfo( 'description' ).'"/>';
+
     $default_image = 'https://avatars3.githubusercontent.com/u/36711733?s=400&u=222c42bbcb09f7639b152cabbe1091b640e78ff2&v=4';
     if( !has_post_thumbnail( $post->ID )) { //the post does not have featured image, use a default image
         if( !empty($header_image) ){
@@ -59,13 +60,13 @@ echo '</head>';
 echo '<body '.$headerbgstyle.' '; body_class(); echo '>';
 ?>
     <div id="pagecontainer" class="site">
-        <div id="topcontent">
+        <div id="topcontent" class="menuright">
             <div class="outerspace">
-            <?php
-            wp_main_theme_toplogo_html();
-            wp_main_theme_menu_html( 'top' , true  );
-            wp_main_theme_widgetarea_html( 'widgets-top-sidebar' );
-            ?>
+
+              <?php wp_main_theme_widgetarea_html( 'widgets-top-sidebar' ); ?>
+              <div class="logobox"><?php wp_main_theme_toplogo_html(); ?></div>
+              <div class="menubox"><?php wp_main_theme_menu_html( 'top' , true ); ?></div>
+
             </div>
         </div>
         <div id="maincontent">
@@ -83,6 +84,7 @@ echo '<body '.$headerbgstyle.' '; body_class(); echo '>';
                     if( is_customize_preview() ){
                         echo '<div id="area-page-main-content" class="customizer-placeholder">Page main content</div>';
                     }
+                    woo_breadcrumbs_display();
                     wp_main_theme_loop_html();
                     ?>
                 </div>
