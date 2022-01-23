@@ -9,6 +9,7 @@ function wp_main_theme_woosome_shop_js() {
     if(is_product_category()){
 		  wp_enqueue_script( 'woosome-swiper-js', 'https://unpkg.com/swiper@7.2.0/swiper-bundle.min.js', [], null, true );
 		  wp_enqueue_script( 'woosome-swiper-functions', get_template_directory_uri() . '/js/woosome_swiper.js', [], null, true );
+		  //wp_enqueue_script( 'woosome-lightbox-functions', get_template_directory_uri() . '/js/woosome_lightbox.js', [], null, true ); 
     }
     //wp_register_script( 'woosome_shop_js', 'https://unpkg.com/swiper@7.2.0/swiper-bundle.min.js', 99, '7.2.0', false); // register swiperjs
     //wp_enqueue_script( 'woosome_shop_js');
