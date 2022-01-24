@@ -6,7 +6,7 @@
 // register functions
 require_once( get_template_directory() . '/customizer.php'); // customizer functions
 require_once( get_template_directory() . '/assets/woosome_functions.php');
-//require_once( get_template_directory() . '/assets/widget_breadcrumbs.php');
+//require_once( get_template_directory() . '/assets/popup_functions.php');
 
 
 

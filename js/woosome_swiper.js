@@ -6,6 +6,7 @@ var swipecontainer = $('.products.columns-8').wrap("<div class='swiper-container
 $('h2.woocommerce-loop-product__title').wrap("<div class='product-slide-title-wrapper'/>");
 
 var nav = '<div class="swiper-button-next"></div><div class="swiper-button-prev"></div><div class="swiper-pagination swiper-pagination-h"></div>';
+
 swipecontainer.addClass('swiper-wrapper');
 swipecontainer.parent().append(nav);
 swipecontainer.find('.type-product').addClass('swiper-slide');

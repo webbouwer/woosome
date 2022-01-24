@@ -1,20 +1,35 @@
 jQuery(function($) {
 
+  $('.product').magnificPopup({
+    type:'inline',
+    midClick: true,
+    gallery:{
+      enabled:true
+    },
+    delegate: 'span.wpb_wl_preview',
+    removalDelay: 500, //delay removal by X to allow out-animation
+    callbacks: {
+        beforeOpen: function() {
+           this.st.mainClass = this.st.el.attr('data-effect');
+        }
+    },
+      closeOnContentClick: false,
+  });
+
+  /**
+   * product image lightbox
+   */
+
+  $("[data-fancybox]").fancybox();
+
+});
+
+
+/*
 
   $(window).load(function() {
 
 
-    $('.products.columns-8').on( 'click', '.type-product', function(event){
-          event.stopPropagation();
-          //indexing_items();
-          //set_popup_item($(this));
-          //let imgurl = $(this).find('img').attr('src');
-          alert( 'check!' );
-          return false;
-        });
-
-
-        /*
     // detect click for popup item
     $('ul.products').on( 'click', '.woocommerce-loop-product__link', function(event){
       event.stopPropagation();
@@ -97,6 +112,4 @@ jQuery(function($) {
   		}
 
 
-*/
-});
-});
+});*/

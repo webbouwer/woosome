@@ -9,7 +9,9 @@ function wp_main_theme_woosome_shop_js() {
     if(is_product_category()){
 		  wp_enqueue_script( 'woosome-swiper-js', 'https://unpkg.com/swiper@7.2.0/swiper-bundle.min.js', [], null, true );
 		  wp_enqueue_script( 'woosome-swiper-functions', get_template_directory_uri() . '/js/woosome_swiper.js', [], null, true );
-		  //wp_enqueue_script( 'woosome-lightbox-functions', get_template_directory_uri() . '/js/woosome_lightbox.js', [], null, true ); 
+		  //wp_enqueue_script( 'woosome-fancybox-js', get_template_directory_uri() . '/js/lib/jquery.fancybox.min.js', [], null, true );
+		  //wp_enqueue_script( 'woosome-magnific-popup-js', get_template_directory_uri() . '/js/lib/jquery.magnific-popup.min.js', [], null, true );
+		  //wp_enqueue_script( 'woosome-lightbox-functions', get_template_directory_uri() . '/js/woosome_lightbox.js', 99, null, true );
     }
     //wp_register_script( 'woosome_shop_js', 'https://unpkg.com/swiper@7.2.0/swiper-bundle.min.js', 99, '7.2.0', false); // register swiperjs
     //wp_enqueue_script( 'woosome_shop_js');
@@ -21,6 +23,10 @@ function wp_main_swiperjs_stylesheet(){
   if(is_product_category()){
     $stylesheet = 'https://unpkg.com/swiper@7.2.0/swiper-bundle.min.css';
     echo '<link rel="stylesheet" id="swiperjs-style"  href="'.$stylesheet.'" type="text/css" media="all" />';
+
+    //echo '<link rel="stylesheet" id="fancybox-style"  href="'. get_template_directory_uri() . '/js/lib/jquery.fancybox.min.css" type="text/css" media="all" />';
+    //echo '<link rel="stylesheet" id="magnific-style"  href="'. get_template_directory_uri() . '/js/lib/magnific-popup.css" type="text/css" media="all" />';
+    //echo '<link rel="stylesheet" id="magnific-style"  href="'. get_template_directory_uri() . '/popupstyle.css" type="text/css" media="all" />';
   }
 }
 add_action( 'wp_head', 'wp_main_swiperjs_stylesheet', 9999 );
