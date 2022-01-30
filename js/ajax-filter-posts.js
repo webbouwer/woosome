@@ -1,21 +1,92 @@
 jQuery(function($) {
 
+      var poplist = Array();
+      var popcurrent = '';
+      var idx = 0;
 
+      $('.type-product').each(function() {
+        if ($(this).css('display') != 'none') {
+          $(this).attr("data-index", idx++);
+          $(this).attr("data-product-id", $(this).find('.button').attr("data-product_id"));
+          poplist.push($(this).find('.button').attr("data-product_id"));
+        }
+      });
+
+      $('ul.products').on('click', '.type-product a', function(event) {
+        event.preventDefault();
+        event.stopPropagation();
+        set_popup_item($(this).parent().data("product-id"));
+        return false;
+      });
+
+
+
+
+      function set_popup_item(pid) {
+
+        let popcurrent = pid;
+        const pswpElement = document.querySelectorAll('.pswp')[0];
+
+        data = {
+          action: 'filter_posts', // function to execute
+          afp_nonce: afp_vars.afp_nonce, // wp_nonce
+          postid: pid, // post id
+        };
+
+        $.post(afp_vars.afp_ajax_url, data, function(response) {
+
+          if (response.length > 0) {
+            //console.log(response);
+            // add content to window
+            // photoswipe popups: https://github.com/dimsemenov/PhotoSwipe/issues/1319
+          }
+
+        }).done(function(data) {
+
+          //console.log(data);
+          // !get more variations/thumbnails
+
+          // ready loading ..
+          var svi_items = [];
+          // define options (if needed)
+          var options = {
+              index: 0 // start at first slide
+          };
+          // define items
+          var obj = JSON.parse(data);
+          svi_items.push({
+            src: obj["thumb"][0],
+            w: obj["thumb"][1],
+            h: obj["thumb"][2],
+            msrc: obj["thumb"][0],
+            title: obj["post"].post_title
+          });
+
+          var gallery = new PhotoSwipe(pswpElement, PhotoSwipeUI_Default, svi_items, options);
+          gallery.init();
+
+        });
+      }
+
+
+
+/*
   $(window).load(function() {
 
-    const getQueryParams = ( params, str ) => {
 
-  // this is an expression to get query strings
-  let regexp = new RegExp( '[?&]' + params + '\-([^&#]*)', 'i' );
-  let qString = regexp.exec(str);
-  return qString ? qString[1] : null;
-};
+    $('ul.products').on( 'click', '.type-product a', function(event){
+      event.preventDefault();
+      event.stopPropagation();
+      //set_popup_item($(this));
+      return false;
+    });
+    */
 
+/*
     // detect click for popup item
-    $('.products.columns-8').on( 'click', '.type-product', function(event){
+    $('.productbox-container').on( 'click', '.product-item-box', function(event){
       event.stopPropagation();
       indexing_items();
-
       set_popup_item($(this));
       return false;
     });
@@ -39,11 +110,9 @@ jQuery(function($) {
     // define index popup items
     function indexing_items(){
       var idx = 0;
-      $('.type-product').each(function(){
+      $('.product-item-box').each(function(){
           //if ( $(this).css('display') != 'none' ){
           $(this).attr( "data-index", idx++ );
-          let id = getQueryParams('post', $(this).attr( "class" ));
-          $(this).attr( "data-id", id );
           //}
       });
     }
@@ -51,7 +120,7 @@ jQuery(function($) {
     		function set_popup_item(item){
       			if( $('.popupbox').length < 1 ){
           		$('body').append('<div class="popupbg" style="display:none;position:absolute;width:100%;min-height:'+$(document).height()+'px;top:0px;left:0px;z-index:99;"><div class="popuploading"><span>Loading..</span></div><div id="itempopbox" class="popupbox" style="display:none;"></div></div>');
-          		$('html, body').animate({ scrollTop: $("#topcontent").offset().top }, 500);
+          		$('html, body').animate({ scrollTop: $("#topcontainer").offset().top }, 500);
           		$('.popupbg').fadeIn('slow');
       			}
       			loadpopupitem( item.attr('data-id') );
@@ -95,6 +164,8 @@ jQuery(function($) {
             		});
   		}
 
-  	});
+
+
+}); */
 
 });

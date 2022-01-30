@@ -6,9 +6,17 @@
 // register functions
 require_once( get_template_directory() . '/customizer.php'); // customizer functions
 require_once( get_template_directory() . '/assets/woosome_functions.php');
-//require_once( get_template_directory() . '/assets/popup_functions.php');
+require_once( get_template_directory() . '/assets/woosome_ajax_functions.php');
 
 
+
+// woocommerce > settings > advanced > REST API > add key
+//$consumerkey = 'ck_e300632926c32a2be5f5e38122425850101f06aa';
+//$consumersecret = 'cs_a22f2c742d1b187d678d4491490c490d5d8902cf';
+// routes https://qmf-trading.com/preview-shop/wp-json/wc/v3
+// ie https://qmf-trading.com/preview-shop/wp-json/wc/v3/products?consumer_key=ck_e300632926c32a2be5f5e38122425850101f06aa&consumer_secret=cs_a22f2c742d1b187d678d4491490c490d5d8902cf
+
+// https://qmf-trading.com/preview-shop/wp-json/wc/v3/products/<PRODUCT_ID>
 
 // register options
 function theme_post_thumbnails() {
@@ -31,12 +39,6 @@ function basic_setup_register_menus() {
 }
 add_action( 'init', 'basic_setup_register_menus' );
 
-/*
-function basic_load_widgets() {
-		register_widget( 'woosome_breadcrumbs_widget' );
-}
-add_action( 'widgets_init', 'basic_load_widgets' );
-*/
 
 // activate the Links Manager:: add_filter( 'pre_option_link_manager_enabled', '__return_true' );
 
@@ -88,150 +90,6 @@ function basic_setup_widgets_init() {
 add_action( 'widgets_init', 'basic_setup_widgets_init' );
 
 
-// register global variables (options/customizer)
-$wp_global_data = array();
-// all post data global
-function wp_main_theme_get_postdata(){
-        $args = array(
-            //'tag'               => json_encode($this->tagfilter),
-            //'category_name'     => json_encode($this->catfilter),
-            //'post_type'         => 'post', // 'any',  = incl pages
-            //'post__not_in'      => $this->loadedID,
-            'post_status'       => 'publish',
-            'orderby'           => 'date',
-            'order'             => 'DESC',      // 'DESC', 'ASC' or 'RAND'
-            'posts_per_page'  => -1,
-            //'posts_offset'      => $ppload,
-            //'suppress_filters'  => false,
-        );
-        $query = new WP_Query( $args );
-        $response = array();
-        $count = array();
-        if ( $query->have_posts() ) :
-            while ( $query->have_posts() ) : $query->the_post();
-                // post text
-                $excerpt_length = 120; // words
-                $post = get_post($post->id);
-                $fulltext = $post->post_content;//  str_replace( '<!--more-->', '',);
-                $content = apply_filters('the_content', $fulltext );
-                $excerpt = truncate( $content, $excerpt_length, '', false, true );  // get_the_excerpt()
-                $response[] = array(
-                    'id' => get_the_ID(),
-                    'link' => get_the_permalink(),
-                    'title' => get_the_title(),
-                    'image' => get_the_post_thumbnail(),
-                    'excerpt' => $excerpt,
-                    'content' => $content,
-                    'cats' => wp_get_post_terms( get_the_ID(), 'category', array("fields" => "slugs")),
-                    'tags' => wp_get_post_terms( get_the_ID(), 'post_tag', array("fields" => "slugs")),
-                    'date' => get_the_date(),
-                    'timestamp' => strtotime(get_the_date()),
-                    'author' => get_the_author(),
-                    'custom_field_keys' => get_post_custom_keys()
-                );
-            endwhile;
-        else:
-           $response[0] = 'No posts found';
-        endif;
-        wp_reset_query();
-        ob_clean();
-        //wp_die();
-        return $response;
-}
-
-/*
-function wp_main_theme_get_customizer(){
-    return json_encode( get_theme_mods() );
-}
-function wp_main_theme_get_all_posts(){
-    return json_encode( wp_main_theme_get_postdata() );
-}
-function wp_main_theme_get_all_tags(){
-    return json_encode( get_terms( 'post_tag' ) );
-}
-function wp_main_theme_get_all_categories(){
-    return json_encode( get_categories( array("type"=>"post") ) );
-}
-// data for global js
-$wp_global_data['customdata']   = wp_main_theme_get_customizer();
-$wp_global_data['postdata']     = wp_main_theme_get_all_posts();
-$wp_global_data['tagdata']      = wp_main_theme_get_all_tags();
-$wp_global_data['catdata']      = wp_main_theme_get_all_categories();
-
-// register global customizer variables
-
-function wp_main_theme_global_js() {
-    // add jquery
-    wp_enqueue_script("jquery"); // default wp jquery
-    wp_register_script( 'custom_global_js', get_template_directory_uri().'/js/global.js', 99, '1.0', false); // register the script
-    global $wp_global_data; // get global data var
-		wp_localize_script( 'custom_global_js', 'site_data', $wp_global_data ); // localize the global data list for the script
-    // localize the script with specific data.
-    //$color_array = array( 'color1' => get_theme_mod('color1'), 'color2' => '#000099' );
-    //wp_localize_script( 'custom_global_js', 'object_name', $color_array );
-    // The script can be enqueued now or later.
-    wp_enqueue_script( 'custom_global_js');
-}
-add_action('wp_enqueue_scripts', 'wp_main_theme_global_js');
-*/
-
-/*
-function ajax_filter_posts_scripts() {
-  // Enqueue script
-  wp_register_script('afp_script', get_template_directory_uri() . '/js/ajax-filter-posts.js', false, null, false);
-  wp_enqueue_script('afp_script');
-
-  wp_localize_script( 'afp_script', 'afp_vars', array(
-    'afp_nonce' => wp_create_nonce( 'afp_nonce' ), // Create nonce which we later will use to verify AJAX request
-    'afp_ajax_url' => admin_url( 'admin-ajax.php' ),
-  )
-  );
-}
-add_action('wp_enqueue_scripts', 'ajax_filter_posts_scripts', 100);
-
-// Get posts
-function ajax_get_post() {
-
-  	// Verify nonce
-  	if( !isset( $_POST['afp_nonce'] ) || !wp_verify_nonce( $_POST['afp_nonce'], 'afp_nonce' ) )
-    	die('Permission denied');
-
-	if( isset( $_POST['postid'] ) ){
-		//$data = array(
-		//'post' => get_post( $_POST['postid'] ),
-		//'thumb' => wp_get_attachment_image_src( get_post_thumbnail_id( $_POST['postid'] ), 'post') ,
-    //  		'meta' => get_post_meta( $_POST['postid'] ),
-		//'custom' => get_post_custom_keys( $_POST['postid'] )
-		//);
-		//echo json_encode( $data );
-
-		$thumb = wp_get_attachment_image_src( get_post_thumbnail_id( $_POST['postid'] ), 'post');
-		$post = get_post( $_POST['postid'] );
-		$custom = get_post_custom( $_POST['postid'] );
-
-		echo '<div class="closebutton"><a href="#">x</a></div>';
-		echo '<div class="infobox"><div class="titlebox"><h3>'.$post->post_title.'</h3></div>';
-
-  		echo '<a class="iconlinkbox" href="'.get_the_permalink().'"><span>' . $custom['potmaat'][0] . '</span>';
-  		echo '<span>' . $custom['hoogte'][0] . '</span>';
-  		echo '<span>' . $custom['belading'][0] . '</span>';
-  		echo '<span>' . $custom['doos'][0] . '</span></a>';
-
-		if( !empty( $post->post_content ) ) echo '<div class="textbox"><p>'.$post->post_content.'</p></div>';
-
-		echo '</div>';
-		echo '<img src="'.$thumb[0].'" alt="'.$post->post_title.'" />';
-
-	}
-    	exit();
-
-}
-add_action('wp_ajax_filter_posts', 'ajax_get_post');
-add_action('wp_ajax_nopriv_filter_posts', 'ajax_get_post');
-*/
-
-
-
 // register style sheet
 function wp_main_theme_stylesheet(){
     $stylesheet = get_template_directory_uri().'/style.css';
@@ -244,8 +102,6 @@ function Woosome_editor_styles() {
     add_editor_style( 'style.css' );
 }
 add_action( 'admin_init', 'woosome_editor_styles' );
-
-
 
 
 
@@ -471,6 +327,9 @@ function check_sidebar_params( $params ) {
 }
 // Add widget param check for empty html correction
 add_filter( 'dynamic_sidebar_params', 'check_sidebar_params' );
+
+
+
 
 
 

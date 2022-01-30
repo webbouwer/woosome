@@ -55,7 +55,6 @@ var swiper = new Swiper(".swiper-container-h", {
     onlyInViewport: false,
   },
   /*
-
   mousewheel: {
   	enabled: false,
   },
