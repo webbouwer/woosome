@@ -1,6 +1,7 @@
 jQuery(function($) {
 
-      var poplist = Array();
+      const poplist = Array();
+      const pswpElement = document.querySelectorAll('.pswp')[0];
       var popcurrent = '';
       var idx = 0;
 
@@ -20,17 +21,21 @@ jQuery(function($) {
       });
 
 
-
-
       function set_popup_item(pid) {
 
-        let popcurrent = pid;
-        const pswpElement = document.querySelectorAll('.pswp')[0];
+        //var pidx = poplist.indexOf(pid);
+        for(var i=0; i<poplist.length; i++){
+          var xx = poplist[i];
+          if(xx == pid){
+            var pidx = i+1;
+            break;
+          }
+        }
 
         data = {
-          action: 'filter_posts', // function to execute
+          action: 'filter_postlist', // function to execute
           afp_nonce: afp_vars.afp_nonce, // wp_nonce
-          postid: pid, // post id
+          postids: poplist, // post id
         };
 
         $.post(afp_vars.afp_ajax_url, data, function(response) {
@@ -43,25 +48,29 @@ jQuery(function($) {
 
         }).done(function(data) {
 
-          //console.log(data);
+          console.log(data);
           // !get more variations/thumbnails
-
           // ready loading ..
           var svi_items = [];
           // define options (if needed)
           var options = {
-              index: 0 // start at first slide
+              index: pidx // start at current/first slide
           };
           // define items
           var obj = JSON.parse(data);
-          svi_items.push({
-            src: obj["thumb"][0],
-            w: obj["thumb"][1],
-            h: obj["thumb"][2],
-            msrc: obj["thumb"][0],
-            title: obj["post"].post_title
-          });
 
+          $.each(obj,function(idx, val){
+
+            svi_items.push({
+              src: obj[idx]["thumb"][0],
+              w: obj[idx]["thumb"][1],
+              h: obj[idx]["thumb"][2],
+              msrc: obj[idx]["thumb"][0],
+              title: obj[idx]["post"].post_title
+            });
+
+          })
+    
           var gallery = new PhotoSwipe(pswpElement, PhotoSwipeUI_Default, svi_items, options);
           gallery.init();
 
